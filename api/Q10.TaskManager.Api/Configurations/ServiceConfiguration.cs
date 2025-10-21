@@ -1,4 +1,5 @@
-﻿using Q10.TaskManager.Infrastructure.Interfaces;
+﻿using Q10.TaskManager.Api.Workers;
+using Q10.TaskManager.Infrastructure.Interfaces;
 using Q10.TaskManager.Infrastructure.Repositories;
 using Q10.TaskManager.Infrastructure.Services;
 
@@ -10,14 +11,26 @@ namespace Q10.TaskManager.Api.Configurations
         {
             // Add services to the container.
             #region Repositories
+
             services.AddScoped<IConfig, SettingsRepository>();
             services.AddScoped<ICacheRepository, CacheRepository>();
             services.AddScoped<ITaskRepository, TaskRepository>();
-            #endregion
+            services.AddSingleton<IRabbitMQRepository, RabbitMQRepository>();
+
+            #endregion Repositories
 
             #region Services
             services.AddScoped<ITaskService, TaskService>();
-            #endregion
+
+            // CQRS Services
+            services.AddScoped<ITaskBulkCommandService, TaskBulkCommandService>();
+            services.AddScoped<ITaskBulkQueryService, TaskBulkQueryService>();
+                
+            // RabbitMQ Services
+            services.AddSingleton<IRabbitMQRepository, RabbitMQRepository>();
+            services.AddScoped<IProcessBulkService, ProcessBulkService>();
+            services.AddHostedService<ProcessBulkWorker>();
+            #endregion Services
 
             return services;
         }
