@@ -15,6 +15,7 @@ namespace Q10.TaskManager.Infrastructure.Repositories
         {
             var factory = new ConnectionFactory
             {
+                // Este HostName es el que se usa en el docker compose.
                 HostName = "rabbitmq",
                 Port = 5672,
                 UserName = "admin",

@@ -21,6 +21,8 @@ namespace Q10.TaskManager.Infrastructure.Services
 
             await _rabbitMQRepository.PublishAsync(command, "task-bulk-queue");
 
+            // Retornar los IDs reales de las tareas
+            var taskIds = tasks.Select(t => t.Id).ToList();
             return command.Id;
         }
     }

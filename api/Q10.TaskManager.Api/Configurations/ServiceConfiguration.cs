@@ -29,7 +29,7 @@ namespace Q10.TaskManager.Api.Configurations
             // RabbitMQ Services
             services.AddSingleton<IRabbitMQRepository, RabbitMQRepository>();
             services.AddScoped<IProcessBulkService, ProcessBulkService>();
-            services.AddHostedService<ProcessBulkWorker>();
+            services.AddHostedService<ProcessBulkWorker>(); // Forma de configurar un worker al service. Adicional los hostedservices son singleton.
             #endregion Services
 
             return services;

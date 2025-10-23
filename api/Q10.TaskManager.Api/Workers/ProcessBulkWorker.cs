@@ -26,11 +26,21 @@ namespace Q10.TaskManager.Api.Workers
                 {
                     var processBulkService = scope.ServiceProvider.GetRequiredService<IProcessBulkService>();
                     await processBulkService.StartConsumingAsync();
+
+                    //Si llegamos aqui, el servicio se ha iniciado correctamente
+                    _logger.LogInformation("ProcessBulkService started successfully.");
+
+                    // Mantener el worker corriendo.
+                    while (!stoppingToken.IsCancellationRequested)
+                    {
+                        await Task.Delay(1000, stoppingToken);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error starting ProcessBulkService");
+                await Task.Delay(Timeout.Infinite, stoppingToken); // Detener el worker en caso de error
             }
 
             // Keep the worker running
